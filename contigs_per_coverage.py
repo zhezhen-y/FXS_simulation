@@ -9,7 +9,10 @@ Created on Tue Jul 12 11:13:15 2022
 from Bio import SeqIO
 from Bio.Seq import Seq
 import pandas as pd
+import os
+import glob
 import make_reads_fmr1
+
 
 '''
 This script makes a plot showing the relationships of 
@@ -43,6 +46,7 @@ def read_contigs(fasta_file):
 
 # Define a function to get the parameters used in each simulation
 def read_para(para_file):
+    
     # load the file in a dataframe
     input_para = pd.read_table(para_file,delimiter="\t",header=None)
     # dict(df.values) converts 2-column dataframes to dictionaries
@@ -50,7 +54,8 @@ def read_para(para_file):
     # get the keys to template_len and repeat_units
     true_len = int(input_para_dic['template_length'])
     repeat_unit = int(input_para_dic['repeat_units'])
-    return true_len, repeat_unit
+    coverage = int(input_para_dic['coverage'])
+    return true_len, repeat_unit, coverage
 
 # counts the valid contigs in the unmasked contigs output files
 def count_correct_contigs(contigs, true_len, repeat_unit):
@@ -68,15 +73,42 @@ def count_correct_contigs(contigs, true_len, repeat_unit):
     valid_in_total = round(valid_contig/len(contigs),2)
     return valid_contig, valid_in_total
 
+def contig_per_coverage(test_dir):
+    # Get the test name
+    test = os.path.basename(test_dir)
+    if test == '':
+        print("Warning: test_dir ended with '/'")
+    # Read the unmasked contigs
+    contig_file = os.path.join(test_dir, "output/bs_1/templates_unmasked.fa")
+    contigs = read_contigs(contig_file)
+    # Import the input parameters
+    para_file = os.path.join(test_dir, "input/input_parameters.txt")
+    # Record useful parameters
+    true_len, repeat_unit, coverage = read_para(para_file)
+    # Count correct contigs
+    contig_num, percent = count_correct_contigs(contigs, true_len, repeat_unit)
+    # Output results
+    return coverage, contig_num
+    
 '''
 PART1 Counting the contigs in a test file
 '''
 # Write a block that counts the valid contigs in the unmasked contigs output files
 # Directory of the test templates_unmasked.fa file 
-test_file = "/Volumes/data/safe/zhezhen/FMR1/test3_1000s_100x/output/bs_1/templates_unmasked.fa"
-# Import the input parameters
-input_para_file = "/Volumes/data/safe/zhezhen/FMR1/test3_1000s_100x/input/input_parameters.txt"
+test_dir = "/Volumes/data/safe/zhezhen/FMR1/test3_1000s_100x"
+contig_per_coverage(test_dir)
 
+
+record = []
+working_dir = "/Volumes/data/safe/zhezhen/FMR1"
+for folder in glob.glob(os.path.join(working_dir,'test3_1000s*')):  
+    contig_file = os.path.join(folder, "output/bs_1/templates_unmasked.fa")
+    if os.path.exists(contig_file):
+        coverage, contig_num = contig_per_coverage(folder)
+        record.append(contig_per_coverage(folder)) 
+    else:
+        print(os.path.basename(folder),'failed to assemble')
+    
 
 '''
 PART2 Loop through the folders
