@@ -144,7 +144,7 @@ def sorted_array_from_list(list):
     return sorted_array
 
 
-def plot_contig_per_contig():
+def plot_contig_per_coverage():
     # make a plot
     fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(10,12))
     # sort the record by coverage
@@ -192,35 +192,5 @@ if __name__ == "__main__":
     test3_record = loop_through_folders('test3_1000s*') 
  
     # make a plot
-    plot_contig_per_contig()
+    plot_contig_per_coverage()
   
-
-
-'''
-PART1 Counting the contigs in a test file
-'''
-
-
-'''
-PART2 Loop through the folders
-'''
-# Loop through the folders to get a dataframe recording the parameters and the results
-
-# Different tests are in the test* folders
-# Print the parent directory and record a new entry
-
-# Check if the unmasked contig file exist
-# If exist, continue; if not, record file not exist
-
-# Besides coverage, also record number of repeats, number of templates, conversion rate; those parameters are in the simulation input parameter sets;
-# If the parameter file do not exist, then record file not exist
- 
-# Record kmer used in the dataframe; that is in the museq parameter set and is recorded in the output file.
-
-# Use the functions in the first block to get the number and the percentage of contigs recovered.
-
-'''
-PART3 Make a plot using the dataframe I have
-x axis is the coverage 
-y axis is percentage of recovered contigs
-'''
