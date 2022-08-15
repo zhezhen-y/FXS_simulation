@@ -180,7 +180,7 @@ def make_reads(folder, samples_seq, patterns, ADD_ERROR=True):
     fo2.close()	
     # end
 
-if __name__=="main":
+if __name__=="__main__":
     
     '''
     PART 0: Set the output directory, total samples(initial template molecules) and coverage

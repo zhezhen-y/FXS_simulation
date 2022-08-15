@@ -23,12 +23,12 @@ bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_100s_100x_0.4 100 100
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_100s_100x_0.5 100 100 300 0.5 &
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_100s_100x_0.6 100 100 300 0.6 &
 
-# lower the coverage to 50x for 1000 template olecules and see how museq works 
+# lower the coverage to 50x for 1000 template molecules and see how museq works 
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_1000s_50x 1000 50 300 0.5 &
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test2_1000s_50x 1000 50 100 0.5 &
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test1_1000s_50x 1000 50 30 0.5 &
 
-# lower the coverage to 500x for 1000 template olecules and see how museq works 
+# lower the coverage to 500x for 1000 template molecules and see how museq works 
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_1000s_500x 1000 500 300 0.5 &
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test2_1000s_500x 1000 500 100 0.5 &
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test1_1000s_500x 1000 500 30 0.5 &
@@ -43,3 +43,19 @@ cd /data/safe/zhezhen/FMR1
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_1000s_200x 1000 200 300 0.5 &
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_1000s_300x 1000 300 300 0.5 &
 bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test3_1000s_400x 1000 400 300 0.5 &
+
+# 20220814
+# open a screen to run these commands
+screen -S Test
+# change the working directory
+cd /data/safe/zhezhen/FMR1
+# test1(30 repeat units) 1000 templates, 200x, 300x and 400x coverage
+bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test1_1000s_200x 1000 200 30 0.5 &
+bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test1_1000s_300x 1000 300 30 0.5 &
+bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test1_1000s_400x 1000 400 30 0.5 &
+
+# test2(30 repeat units) 1000 templates, 200x, 300x and 400x coverage
+# It takes around 2.5 hours to get the templates_unmasked.fa files
+bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test2_1000s_200x 1000 200 100 0.5 &
+bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test2_1000s_300x 1000 300 100 0.5 &
+bash run_museq_fmr1_stdin.sh /data/safe/zhezhen/FMR1/test2_1000s_400x 1000 400 100 0.5 &
