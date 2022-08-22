@@ -91,6 +91,7 @@ def count_correct_contigs(contigs, true_len, repeat_unit):
             valid_contig += 1   
     return valid_contig
 
+# Get the basename of a directory
 def get_dir_basename(test_dir):
     test = os.path.basename(test_dir)
     if test == '':
@@ -118,8 +119,14 @@ def valid_in_total(valid_contig, total_template = 1000):
     valid_in_total = round(valid_contig/total_template,2)
     return valid_in_total
 
-# Loop through the test conditions using regex
-def loop_through_folders(test_names):
+# Sort the array by the second column ('coverage')
+def sorted_array_from_list(list):
+    array = np.array(list)
+    sorted_array = array[array[:,1].argsort()]
+    return sorted_array
+
+# Loop through the test conditions to record repeat unit, coverage, and correct contigs for each condition in an array
+def loop_through_folders(test_names):  
     record = []
     # Where all the simulated files are
     working_dir = "/Volumes/data/safe/zhezhen/FMR1"
@@ -135,27 +142,24 @@ def loop_through_folders(test_names):
             record.append(list(contig_per_coverage(folder)))
         else:
             print(os.path.basename(folder),'failed to assemble or wrong output file structures')
-    return record
-
-# Sort the array by the second column ('coverage')
-def sorted_array_from_list(list):
-    array = np.array(list)
+    # Sort the array by the second column ('coverage')
+    # Columns in the array are repeat_unit, coverage, valid_contig
+    array = np.array(record)
     sorted_array = array[array[:,1].argsort()]
     return sorted_array
 
-
-def plot_contig_per_coverage():
+# Make a plot to summarize the simulated results, each test grouped by repeat unit as a subplot in the figure
+def plot_contig_per_coverage(test1_arr,test2_arr,test3_arr):
     # make a plot
     fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(10,12))
-    # sort the record by coverage
-    test1_record_arr = sorted_array_from_list(test1_record)
-    test2_record_arr = sorted_array_from_list(test2_record)
-    test3_record_arr = sorted_array_from_list(test3_record)
+    # filter the array, only take records where coverage < 550x 
+    test1_arr = test1_arr[(test1_arr[:,1] < 550), : ]
+    test2_arr = test2_arr[(test2_arr[:,1] < 550), : ]
+    test3_arr = test3_arr[(test3_arr[:,1] < 550), : ]
     # add lines
-    line1, = axes[0].plot(test1_record_arr[:-1, 1], test1_record_arr[:-1, 2], 'o-', color='orange')
-
-    line2, = axes[1].plot(test2_record_arr[:-1, 1], test2_record_arr[:-1, 2], 'o-', color='orangered')
-    line3, = axes[2].plot(test3_record_arr[:, 1], test3_record_arr[:, 2], 'o-', color='mediumpurple')
+    line1, = axes[0].plot(test1_arr[:, 1], test1_arr[:, 2], 'o-', color='orange')
+    line2, = axes[1].plot(test2_arr[:, 1], test2_arr[:, 2], 'o-', color='orangered')
+    line3, = axes[2].plot(test3_arr[:, 1], test3_arr[:, 2], 'o-', color='mediumpurple')
     # add legends
     axes[0].legend([line1],["normal(30 repeat units)"],loc='lower right')
     axes[1].legend([line2],["premutation(100 repeat units)"],loc='lower right')
@@ -187,10 +191,10 @@ if __name__ == "__main__":
     check_para_file('test3_1000s*')
     
     #loop_through_folders('test3_1000s*')    
-    test1_record = loop_through_folders('test1_1000s*') 
-    test2_record = loop_through_folders('test2_1000s*') 
-    test3_record = loop_through_folders('test3_1000s*') 
+    test1_arr = loop_through_folders('test1_1000s*') 
+    test2_arr = loop_through_folders('test2_1000s*') 
+    test3_arr = loop_through_folders('test3_1000s*') 
  
     # make a plot
-    plot_contig_per_coverage()
+    plot_contig_per_coverage(test1_arr,test2_arr,test3_arr)
   
